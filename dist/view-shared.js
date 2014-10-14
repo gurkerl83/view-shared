@@ -23,8 +23,6 @@ require 'restangular'
 
   require('restangular');
 
-  require('array');
-
   TestApp = (function() {
     function TestApp() {
       return ['restangular', 'ngCordova.plugins.sqlite'];

@@ -19,7 +19,7 @@ require 'lodash'
 #require 'underscore'
 require 'restangular'
 
-require 'array'
+#require 'array'
 
 class TestApp
   constructor: ->
