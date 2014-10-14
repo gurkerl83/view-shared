@@ -19,7 +19,7 @@ require 'restangular'
   require './services/SideMenu'
    */
 
-  require('underscore');
+  require('lodash');
 
   require('restangular');
 

@@ -15,8 +15,8 @@ require './services/ProviderRestangular'
 require './services/SideMenu'
 ###
 
-#require 'lodash'
-require 'underscore'
+require 'lodash'
+#require 'underscore'
 require 'restangular'
 
 class TestApp
