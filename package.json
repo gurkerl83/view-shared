@@ -35,10 +35,15 @@
     "grunt-ng-classify": "~3.0.0",
     "grunt-browserify": "~3.0.1",
     "coffeeify": "~0.7.0",
-    "grunt-contrib-coffee": "~0.12.0"
+    "grunt-contrib-coffee": "~0.12.0",
+    "browserify": "~6.1.0",
+    "browserify-shim": "~3.8.0"
   },
   "dependencies": {
     "squel": "~3.8.1",
-    "async": "~0.9.0"
-  }
+    "async": "~0.9.0",
+    "underscore": "~1.7.0",
+    "restangular": "~1.4.0"
+  },
+  "browserify-shim": "./grunt/shims.js"
 }

@@ -12,6 +12,10 @@ require './services/ProviderRestangular'
 require './services/SideMenu'
 ###
 
+#require 'lodash'
+require 'underscore'
+require 'restangular'
+
 class TestApp extends App
   constructor: ->
     return [
