@@ -19,6 +19,8 @@ require 'lodash'
 #require 'underscore'
 require 'restangular'
 
+require 'array'
+
 class TestApp extends App
   constructor: ->
     return [
