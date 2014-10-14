@@ -1,7 +1,10 @@
 ###
 require 'restangular'
 ###
-require './common/factories/cordovaSQLite.js'
+
+#require './common/factories/cordovaSQLite.js'
+require 'ng-cordova-sqlite'
+
 ###
 require './db/DBSchemas'
 

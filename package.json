@@ -38,12 +38,25 @@
     "grunt-contrib-coffee": "~0.12.0",
     "browserify": "~6.1.0",
     "browserify-shim": "~3.8.0",
-    "grunt-contrib-copy": "~0.6.0"
+    "grunt-contrib-copy": "~0.6.0",
+    "napa": "~1.0.1"
   },
+
+  "scripts": {
+    "install": "napa"
+  },
+  "napa": {
+    "ng-cordova": "driftyco/ng-cordova"
+  },
+
   "dependencies": {
     "squel": "~3.8.1",
     "async": "~0.9.0",
     "underscore": "~1.7.0",
     "restangular": "~1.4.0"
+  },
+
+  "browser": {
+    "ng-cordova-sqlite": "node_modules/ng-cordova/src/plugins/sqlite.js"
   }
 }

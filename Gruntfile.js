@@ -43,18 +43,17 @@ module.exports = function (grunt) {
     },
 
     coffee: {
-      /*
       compileWithMaps: {
         options: {
           sourceMap: true,
           join: true
         },
         files: {
-          'dist/<%= pkg.name %>.js': ['temp/** /*.coffee'] // concat then compile into single file
+          'dist/<%= pkg.name %>.js': ['temp/**/*.coffee'] // concat then compile into single file
         }
       }
-      */
 
+      /*
       glob_to_multiple: {
         expand: true,
         flatten: true,
@@ -63,6 +62,7 @@ module.exports = function (grunt) {
         dest: 'dist/',
         ext: '.js'
       }
+      */
 
     },
 
@@ -85,5 +85,6 @@ module.exports = function (grunt) {
 
   // Default task.
   //grunt.registerTask('default', ['ngClassify', 'browserify']);
-  grunt.registerTask('default', ['ngClassify', 'coffee', 'copy']);
+  //grunt.registerTask('default', ['ngClassify', 'coffee', 'copy']);
+  grunt.registerTask('default', ['ngClassify', 'coffee']);
 };
