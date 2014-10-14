@@ -1,8 +1,8 @@
 ###
 require 'restangular'
-
-require './common/factories/cordovaSQLite'
-
+###
+require './common/factories/cordovaSQLite.js'
+###
 require './db/DBSchemas'
 
 require './services/AggregationModel'

@@ -7,6 +7,10 @@ module.exports = {
     "underscore": {
         exports: "_"
     }
+
+    //removed from package.json
+    /* "browserify-shim": "./grunt/shims.js" */
+
     /*
     ,
 

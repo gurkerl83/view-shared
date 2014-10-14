@@ -31,16 +31,39 @@ module.exports = function (grunt) {
       }
     },
 
+    copy: {
+      main: {
+        expand: true,
+        cwd: 'src/',
+        src: '**',
+        dest: 'dist/',
+        //flatten: true,
+        filter: 'isFile'
+      }
+    },
+
     coffee: {
+      /*
       compileWithMaps: {
         options: {
           sourceMap: true,
           join: true
         },
         files: {
-          'dist/<%= pkg.name %>.js': ['temp/**/*.coffee'] // concat then compile into single file
+          'dist/<%= pkg.name %>.js': ['temp/** /*.coffee'] // concat then compile into single file
         }
       }
+      */
+
+      glob_to_multiple: {
+        expand: true,
+        flatten: true,
+        cwd: 'src/',
+        src: ['*.coffee'],
+        dest: 'dist/',
+        ext: '.js'
+      }
+
     },
 
     ngClassify: {
@@ -61,6 +84,6 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['ngClassify', 'browserify']);
-  //grunt.registerTask('default', ['ngClassify, coffee']);
+  //grunt.registerTask('default', ['ngClassify', 'browserify']);
+  grunt.registerTask('default', ['ngClassify', 'coffee', 'copy']);
 };
