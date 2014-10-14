@@ -23,7 +23,7 @@ module.exports = function (grunt) {
         files: {
           //'build/module.js': ['client/scripts/**/*.js', 'client/scripts/**/*.coffee'],
           //'dist/<%= pkg.name %>.js': ['src/**/*.coffee']
-          'dist/<%= pkg.name %>.js': ['temp/**/*.coffee']
+          'dist/<%= pkg.name %>.js': ['temp/**/*.coffee', 'src/common/factories/cordovaSQLite.js']
         },
         options: {
           transform: ['coffeeify']

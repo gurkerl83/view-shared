@@ -3434,6 +3434,58 @@ OTHER DEALINGS IN THE SOFTWARE.
 }).call(this);
 
 },{}],4:[function(require,module,exports){
+angular.module('ngCordova.plugins.sqlite', [])
+
+    .factory('$cordovaSQLite', ['$q', function ($q) {
+
+        return  {
+            openDB: function (dbName) {
+                return  window.sqlitePlugin.openDatabase({name: dbName});
+            },
+
+
+            openDBBackground: function (dbName) {
+                return window.sqlitePlugin.openDatabase({name: dbName, bgType: 1});
+            },
+
+            execute: function (db, query, binding) {
+                q = $q.defer();
+                db.transaction(function (tx) {
+                    tx.executeSql(query, binding, function (tx, result) {
+                            q.resolve(result);
+                        },
+                        //function (transaction, error) {
+                        function (tx, error) {
+                            q.reject(error);
+                        });
+                });
+                return q.promise;
+            },
+
+            nestedExecute: function (db, query1, query2, binding1, binding2) {
+                q = $q.defer();
+
+                db.transaction(function (tx) {
+                        tx.executeSql(query1, binding1, function (tx, result) {
+                            q.resolve(result);
+                            tx.executeSql(query2, binding2, function (tx, res) {
+                                q.resolve(res);
+                            })
+                        })
+                    },
+                    //function (transaction, error) {
+                    function (tx, error) {
+                        q.reject(error);
+                    });
+
+                return q.promise;
+            }
+
+            // more methods here
+        }
+    }]);
+
+},{}],5:[function(require,module,exports){
 
 /*
 require 'restangular'
@@ -3465,7 +3517,7 @@ angular.module('shared_view.module', TestApp());
 
 
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var DBSchemas;
 
 DBSchemas = (function() {
@@ -3519,7 +3571,7 @@ angular.module('shared_view.module').constant('DBSCHEMAS', DBSchemas());
 
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var AggregationModel, async, squel;
 
 async = require('async');
@@ -3828,7 +3880,7 @@ angular.module('shared_view.module').service('aggregationModelService', ['DBSCHE
 
 
 
-},{"async":1,"squel":3}],7:[function(require,module,exports){
+},{"async":1,"squel":3}],8:[function(require,module,exports){
 var AggregationRest, async, squel;
 
 async = require('async');
@@ -4703,7 +4755,7 @@ angular.module('shared_view.module').service('aggregationRestService', ['Restang
 
 
 
-},{"async":1,"squel":3}],8:[function(require,module,exports){
+},{"async":1,"squel":3}],9:[function(require,module,exports){
 var Database;
 
 Database = (function() {
@@ -4793,7 +4845,7 @@ angular.module('shared_view.module').service('databaseService', [Database]);
 
 
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var ProviderRestangular;
 
 ProviderRestangular = (function() {
@@ -4816,7 +4868,7 @@ angular.module('shared_view.module').config(['RestangularProvider', ProviderRest
 
 
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var SideMenu;
 
 SideMenu = (function() {
@@ -4877,4 +4929,4 @@ angular.module('shared_view.module').factory('SideMenu', ['$serviceScope', SideM
 
 
 
-},{}]},{},[4,5,6,7,8,9,10]);
+},{}]},{},[5,6,7,8,9,10,11,4]);
