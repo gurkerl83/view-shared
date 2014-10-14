@@ -57,6 +57,6 @@
   },
 
   "browser": {
-    "ng-cordova-sqlite": "node_modules/ng-cordova/src/plugins/sqlite.js"
+    "ng-cordova-sqlite": "./node_modules/ng-cordova/src/plugins/sqlite.js"
   }
 }
