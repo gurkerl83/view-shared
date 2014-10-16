@@ -114,9 +114,15 @@ require 'restangular'
         
           items
          */
-        chrome.runtime.onMessage.addListener(request, sender, sendResponse(function() {
+        chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           debugger;
-        }));
+
+          /*
+          if message.type == "init"
+            chrome.windows.create({url : chrome.extension.getURL('display.html')})
+            sendResponse({ })
+           */
+        });
         debugger;
         return kango.dispatchMessage('persistenceFront2Back', "");
 

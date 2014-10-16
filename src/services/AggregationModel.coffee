@@ -35,9 +35,14 @@ class AggregationModel extends Service
         items
       ###
 
-      chrome.runtime.onMessage.addListener request, sender, sendResponse ->
+      chrome.runtime.onMessage.addListener (message, sender, sendResponse) ->
 
         debugger
+        ###
+        if message.type == "init"
+          chrome.windows.create({url : chrome.extension.getURL('display.html')})
+          sendResponse({ })
+        ###
 
       debugger
       kango.dispatchMessage('persistenceFront2Back', "");

@@ -328,11 +328,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="7815">
           <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding>
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -404,11 +400,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="26" max-vertical-offset="7815">
           <caret line="15" column="16" selection-start-line="15" selection-start-column="16" selection-end-line="15" selection-end-column="16" />
-          <folding>
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -546,13 +538,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/services/AggregationModel.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3448276" vertical-offset="60" max-vertical-offset="8400">
-          <caret line="24" column="9" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
-          <folding>
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1413452908000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
+        <state vertical-scroll-proportion="0.46927375" vertical-offset="180" max-vertical-offset="8475">
+          <caret line="40" column="11" selection-start-line="40" selection-start-column="11" selection-end-line="40" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
