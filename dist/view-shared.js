@@ -99,9 +99,21 @@ require 'restangular'
       this.currentNode = void 0;
       this.state = 'initial';
       this.processResultTransactions = function(filterOn, callback) {
-        if (databaseService.db === void 0) {
-          databaseService.connect();
-        }
+        kango.addMessageListener("persistenceBack2Front", function(event) {
+          console.log('persistenceBack2Front - database transport');
+          if (databaseService.db === void 0) {
+            databaseService.db = event.data;
+          }
+          dealGetTags(callback);
+          return items;
+        });
+        debugger;
+        return kango.dispatchMessage('persistenceFront2Back', "");
+
+        /* out - background db
+        if databaseService.db == undefined
+          databaseService.connect()
+         */
 
         /*
         async.series([
@@ -146,8 +158,14 @@ require 'restangular'
           if results
             console.log results
          */
-        dealGetTags(callback);
-        return items;
+
+        /* out - background db
+        dealGetTags callback
+         */
+
+        /* out - background db
+        items
+         */
       };
       dealGetTags = function(callback) {
         var params2, query;
@@ -237,9 +255,11 @@ require 'restangular'
         items = {};
         _tagInfo = tag;
         _provider = provider;
-        if (databaseService.db === void 0) {
-          databaseService.connect();
-        }
+
+        /* out - background db
+        if databaseService.db == undefined
+          databaseService.connect()
+         */
 
         /*
         async.series([
@@ -296,9 +316,11 @@ require 'restangular'
         _pageSize = pageSize;
         _keyword = keyword;
         _color = color;
-        if (databaseService.db === void 0) {
-          databaseService.connect();
-        }
+
+        /* out - background db
+        if databaseService.db == undefined
+          databaseService.connect()
+         */
         async.series([dealGetLatestPosts(), process(filterOn)], callback(items));
         return items;
       };
@@ -412,10 +434,12 @@ require 'restangular'
         			params[":contentId"] = _provider;
         			var token:SqliteDatabaseToken = _facade.documentDatabase.createCommandToken("SELECT t.*,COUNT(ts.noteId) as postCount FROM notes_tag t,notes_tag_set ts,notes n WHERE t.id = ts.tagId AND ts.noteId = n.id AND n.content = :contentId AND n.state <> 0 GROUP BY ts.tagId HAVING COUNT(ts.noteId) > 0 ORDER BY useCount DESC, latestTime DESC LIMIT 100", params);
          */
+
+        /* out - background db
+        if databaseService.db == undefined
+          databaseService.connect()
+         */
         var params2;
-        if (databaseService.db === void 0) {
-          databaseService.connect();
-        }
         params2 = ["facebook"];
         return $cordovaSQLite.execute(databaseService.db, 'SELECT * FROM notes_tag', []).then(function(data) {
           var i, result;
@@ -428,10 +452,15 @@ require 'restangular'
         });
       };
       this.imported = false;
-      this.getUsers = function(type, callback) {
+      this.getUsers = function(type, callback, db) {
         window.localStorage.setItem("state", "first");
+
+        /* out - background db
+        if databaseService.db == undefined
+          databaseService.connect()
+         */
         if (databaseService.db === void 0) {
-          databaseService.connect();
+          databaseService.db = db;
         }
         return Restangular.one('friends').customPOST(JSON.stringify({}), "", {}, {
           "Content-Type": "application/json",
@@ -657,9 +686,11 @@ require 'restangular'
         async.forEachSeries socialFriends, cleanDir, ->
           callback() if callback
          */
-        if (databaseService.db === void 0) {
-          databaseService.connect();
-        }
+
+        /* out - background db
+        if databaseService.db == undefined
+          databaseService.connect()
+         */
         return $cordovaSQLite.execute(databaseService.db, 'SELECT * FROM notes', []).then(function(data) {
           var i, result;
           i = 0;

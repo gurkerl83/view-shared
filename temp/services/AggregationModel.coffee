@@ -17,8 +17,24 @@ class AggregationModel
 
     @processResultTransactions = (filterOn, callback)->
 
+      kango.addMessageListener "persistenceBack2Front", (event) ->
+
+        console.log 'persistenceBack2Front - database transport'
+
+        if databaseService.db == undefined
+          databaseService.db = event.data
+
+        dealGetTags callback
+
+        items
+
+      debugger
+      kango.dispatchMessage('persistenceFront2Back', "");
+
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
 
       #if(!dataLoaded)
 
@@ -68,11 +84,15 @@ class AggregationModel
           console.log results
       ###
 
+      ### out - background db
       dealGetTags callback
+      ###
 
       #dataLoaded = true
 
+      ### out - background db
       items
+      ###
 
     dealGetTags = (callback) ->
     #dealGetTags = ->
@@ -247,8 +267,10 @@ class AggregationModel
 
       _provider = provider;
 
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
 
       #if(!dataLoaded)
 
@@ -364,9 +386,10 @@ class AggregationModel
       _keyword = keyword
       _color = color
 
-
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
 
       #if(!dataLoaded)
 

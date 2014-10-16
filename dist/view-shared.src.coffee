@@ -106,8 +106,24 @@ class AggregationModel
 
     @processResultTransactions = (filterOn, callback)->
 
+      kango.addMessageListener "persistenceBack2Front", (event) ->
+
+        console.log 'persistenceBack2Front - database transport'
+
+        if databaseService.db == undefined
+          databaseService.db = event.data
+
+        dealGetTags callback
+
+        items
+
+      debugger
+      kango.dispatchMessage('persistenceFront2Back', "");
+
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
 
       #if(!dataLoaded)
 
@@ -157,11 +173,15 @@ class AggregationModel
           console.log results
       ###
 
+      ### out - background db
       dealGetTags callback
+      ###
 
       #dataLoaded = true
 
+      ### out - background db
       items
+      ###
 
     dealGetTags = (callback) ->
     #dealGetTags = ->
@@ -336,8 +356,10 @@ class AggregationModel
 
       _provider = provider;
 
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
 
       #if(!dataLoaded)
 
@@ -453,9 +475,10 @@ class AggregationModel
       _keyword = keyword
       _color = color
 
-
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
 
       #if(!dataLoaded)
 
@@ -638,8 +661,10 @@ class AggregationRest
 
       ###
 
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
 
       # "SELECT t.*,COUNT(ts.noteId) as postCount FROM notes_tag t,notes_tag_set ts,notes n WHERE t.id = ts.tagId AND ts.noteId = n.id AND n.content = :contentId AND n.state <> 0 GROUP BY ts.tagId HAVING COUNT(ts.noteId) > 0 ORDER BY useCount DESC, latestTime DESC LIMIT 100", params);
 
@@ -663,13 +688,18 @@ class AggregationRest
 
     @imported = false
 
-    @getUsers = (type, callback) ->
+    #@getUsers = (type, callback) ->
+    @getUsers = (type, callback, db) ->
 
       window.localStorage.setItem "state", "first"
 
-
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
+
+      if databaseService.db == undefined
+        databaseService.db = db
 
       #ProviderRestangular.one("friends").customPOST(JSON.stringify({}), "", {},
       #providerRestangularService.one("friends").customPOST(JSON.stringify({}), "", {},
@@ -936,8 +966,10 @@ class AggregationRest
         callback() if callback
       ###
 
+      ### out - background db
       if databaseService.db == undefined
         databaseService.connect()
+      ###
 
       $cordovaSQLite.execute(databaseService.db, 'SELECT * FROM notes', []).then (data) ->
       #$cordovaSQLite.execute(db, 'SELECT * FROM notes_tag', []).then (data) ->
