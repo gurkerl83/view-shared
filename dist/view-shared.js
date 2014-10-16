@@ -89,11 +89,13 @@ require 'restangular'
 
   squel = require('squel');
 
+  require('collections/shim-array');
+
   AggregationModel = (function() {
     function AggregationModel(DBSCHEMAS, databaseService) {
       var DefaultChars, Digits, dataLoaded, dealGetLatestPosts, dealGetPostsWithTag, dealGetTags, items, process, process2, randomString, resultTransactions, _color, _keyword, _pageSize, _postInfo, _provider, _tagInfo;
-      this.globalTags = array();
-      resultTransactions = array();
+      this.globalTags = [];
+      resultTransactions = [];
       items = {};
       dataLoaded = false;
       this.currentNode = void 0;
@@ -169,7 +171,7 @@ require 'restangular'
       };
       dealGetTags = function(callback) {
         var params2, query;
-        resultTransactions = array();
+        resultTransactions = [];
         items = {};
         params2 = ["facebook"];
         query = squel.select().from(squel.select().from('notes_tag'), 't').field('t.*').from(squel.select().from('notes_tag_set'), 'ts').field('ts.noteId', 'postCount').from(squel.select().from('notes'), 'n').where(squel.expr().and("t.id = ts.tagId").and("ts.noteId = n.id").and("n.content = 'facebook'").and("n.state <> 0")).group("ts.tagId").order("useCount", false).order("latestTime", false).limit(100).toString();
@@ -251,7 +253,7 @@ require 'restangular'
       _pageSize = void 0;
       _provider = void 0;
       this.initGetPostsWithTagToken = function(tag, provider, filterOn, callback) {
-        resultTransactions = array();
+        resultTransactions = [];
         items = {};
         _tagInfo = tag;
         _provider = provider;
@@ -276,7 +278,7 @@ require 'restangular'
       dealGetPostsWithTag = function(callback) {
         var expr, query;
         resultTransactions = void 0;
-        resultTransactions = array();
+        resultTransactions = [];
         expr = squel.expr();
 
         /*

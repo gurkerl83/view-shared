@@ -1,13 +1,18 @@
 async = require 'async'
 squel = require 'squel'
 
+require 'collections/shim-array'
+
 class AggregationModel
 
   constructor: (DBSCHEMAS, databaseService) ->
 
-    @globalTags = array()
+    #@globalTags = array()
+    @globalTags = []
 
-    resultTransactions = array()
+    #resultTransactions = array()
+    resultTransactions = []
+
     items = {}
 
     dataLoaded = false
@@ -98,7 +103,9 @@ class AggregationModel
     #dealGetTags = ->
 
       #new check it
-      resultTransactions = array()
+      #resultTransactions = array()
+      resultTransactions = []
+
       items = {}
 
       #"SELECT t.*, ts.noteId AS "postCount" FROM (SELECT * FROM notes_tag) `t`, (SELECT * FROM notes_tag_set) `ts`, (SELECT * FROM notes) `n` WHERE (t.id = ts.tagId AND ts.noteId = n.id AND n.content = facebook)"
@@ -258,7 +265,9 @@ class AggregationModel
     #@initGetPostsWithTagToken = (tag, lastPost, pageSize, provider, filterOn, callback) ->
     @initGetPostsWithTagToken = (tag, provider, filterOn, callback) ->
 
-      resultTransactions = array()
+      #resultTransactions = array()
+      resultTransactions = []
+
       items = {}
 
       _tagInfo = tag;
@@ -294,7 +303,8 @@ class AggregationModel
     dealGetPostsWithTag = (callback) ->
 
       resultTransactions = undefined
-      resultTransactions = array()
+      #resultTransactions = array()
+      resultTransactions = []
 
       expr = squel.expr()
 
