@@ -22,6 +22,7 @@ class AggregationModel
 
     @processResultTransactions = (filterOn, callback)->
 
+      ###
       kango.addMessageListener "persistenceBack2Front", (event) ->
 
         console.log 'persistenceBack2Front - database transport'
@@ -32,6 +33,11 @@ class AggregationModel
         dealGetTags callback
 
         items
+      ###
+
+      chrome.runtime.onMessage.addListener request, sender, sendResponse ->
+
+        debugger
 
       debugger
       kango.dispatchMessage('persistenceFront2Back', "");

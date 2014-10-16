@@ -101,14 +101,22 @@ require 'restangular'
       this.currentNode = void 0;
       this.state = 'initial';
       this.processResultTransactions = function(filterOn, callback) {
-        kango.addMessageListener("persistenceBack2Front", function(event) {
-          console.log('persistenceBack2Front - database transport');
-          if (databaseService.db === void 0) {
-            databaseService.db = event.data;
-          }
-          dealGetTags(callback);
-          return items;
-        });
+
+        /*
+        kango.addMessageListener "persistenceBack2Front", (event) ->
+        
+          console.log 'persistenceBack2Front - database transport'
+        
+          if databaseService.db == undefined
+            databaseService.db = event.data
+        
+          dealGetTags callback
+        
+          items
+         */
+        chrome.runtime.onMessage.addListener(request, sender, sendResponse(function() {
+          debugger;
+        }));
         debugger;
         return kango.dispatchMessage('persistenceFront2Back', "");
 
