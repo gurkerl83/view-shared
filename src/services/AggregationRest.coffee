@@ -57,8 +57,7 @@ class AggregationRest extends Service
 
     @imported = false
 
-    #@getUsers = (type, callback) ->
-    @getUsers = (type, callback, db) ->
+    @getUsers = (type, callback) ->
 
       window.localStorage.setItem "state", "first"
 
@@ -67,8 +66,10 @@ class AggregationRest extends Service
         databaseService.connect()
       ###
 
+      ###
       if databaseService.db == undefined
         databaseService.db = db
+      ###
 
       #ProviderRestangular.one("friends").customPOST(JSON.stringify({}), "", {},
       #providerRestangularService.one("friends").customPOST(JSON.stringify({}), "", {},
@@ -81,12 +82,29 @@ class AggregationRest extends Service
 
       ).then (result) ->
 
+
+        kango.addMessageListener(("persistenceBack2FrontConcrete"), (event) ->
+
+            console.log 'persistenceBack2FrontConcrete - database transport'
+
+            debugger
+
+            callback() if callback
+
+        );
+
+        kango.dispatchMessage('persistenceFront2BackConcrete', {'method': 'getUsers', 'dataObject': result.socialFriends});
+
+
         #async.forEachSeries result.socialFriends, preProcess, ->
+
+        ### out handled in background script
         async.forEachSeries result.socialFriends, preProcess, (err) ->
 
           console.log "Error in preProcess"?
 
           callback() if callback
+        ###
 
     preProcess = (socialFriend, callback) ->
 
@@ -1301,4 +1319,4 @@ class AggregationRest extends Service
     aggregationModelService.resultTransactions.push entity
 ###
 
-module.exports = AggregationRest
+#module.exports = AggregationRest

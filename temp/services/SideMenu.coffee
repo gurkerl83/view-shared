@@ -39,7 +39,7 @@ class SideMenu extends Service
   #constructor: ($cordovaCamera, $cordovaContacts, GalleryService, $cordovaDevice) ->
 ###
 
-module.exports = SideMenu
+#module.exports = SideMenu
 
 angular.module('shared_view.module')
 .factory('SideMenu', ['$serviceScope', SideMenu])

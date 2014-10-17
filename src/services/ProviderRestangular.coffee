@@ -10,4 +10,4 @@ class ProviderRestangular extends Config #Service #Factory
       RestangularConfigurer.setBaseUrl "http://millipede.me:9001/"
     ###
 
-module.exports = ProviderRestangular
+#module.exports = ProviderRestangular

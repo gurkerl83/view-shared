@@ -118,4 +118,4 @@ class Database extends Service
   )()
   ###
 
-module.exports = Database
+#module.exports = Database

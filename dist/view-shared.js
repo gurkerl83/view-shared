@@ -89,13 +89,11 @@ require 'restangular'
 
   squel = require('squel');
 
-  require('collections/shim-array');
-
   AggregationModel = (function() {
     function AggregationModel(DBSCHEMAS, databaseService) {
-      var DefaultChars, Digits, dataLoaded, dealGetLatestPosts, dealGetPostsWithTag, dealGetTags, items, process, process2, randomString, resultTransactions, _color, _keyword, _pageSize, _postInfo, _provider, _tagInfo;
-      this.globalTags = [];
-      resultTransactions = [];
+      var DefaultChars, Digits, dataLoaded, dealGetLatestPosts, dealGetTags, items, process, process2, randomString, resultTransactions, _color, _keyword, _pageSize, _postInfo, _provider, _tagInfo;
+      this.globalTags = array();
+      resultTransactions = array();
       items = {};
       dataLoaded = false;
       this.currentNode = void 0;
@@ -113,18 +111,21 @@ require 'restangular'
           dealGetTags callback
         
           items
+        
+        debugger
+        kango.dispatchMessage('persistenceFront2Back', "");
          */
-        chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+        kango.addMessageListener("persistenceBack2FrontConcrete", function(event) {
+          console.log('persistenceBack2Front - database transport');
           debugger;
-
-          /*
-          if message.type == "init"
-            chrome.windows.create({url : chrome.extension.getURL('display.html')})
-            sendResponse({ })
-           */
+          if (callback) {
+            return callback(event.data.dataObject);
+          }
         });
-        debugger;
-        return kango.dispatchMessage('persistenceFront2Back', "");
+        return kango.dispatchMessage('persistenceFront2BackConcrete', {
+          'method': 'processResultTransactions',
+          'dataObject': 'facebook'
+        });
 
         /* out - background db
         if databaseService.db == undefined
@@ -185,7 +186,8 @@ require 'restangular'
       };
       dealGetTags = function(callback) {
         var params2, query;
-        resultTransactions = [];
+        console.log('dealGetTags called');
+        resultTransactions = array();
         items = {};
         params2 = ["facebook"];
         query = squel.select().from(squel.select().from('notes_tag'), 't').field('t.*').from(squel.select().from('notes_tag_set'), 'ts').field('ts.noteId', 'postCount').from(squel.select().from('notes'), 'n').where(squel.expr().and("t.id = ts.tagId").and("ts.noteId = n.id").and("n.content = 'facebook'").and("n.state <> 0")).group("ts.tagId").order("useCount", false).order("latestTime", false).limit(100).toString();
@@ -267,7 +269,7 @@ require 'restangular'
       _pageSize = void 0;
       _provider = void 0;
       this.initGetPostsWithTagToken = function(tag, provider, filterOn, callback) {
-        resultTransactions = [];
+        resultTransactions = array();
         items = {};
         _tagInfo = tag;
         _provider = provider;
@@ -286,43 +288,16 @@ require 'restangular'
           ],
           callback(items))
          */
-        dealGetPostsWithTag(callback);
-        return items;
-      };
-      dealGetPostsWithTag = function(callback) {
-        var expr, query;
-        resultTransactions = void 0;
-        resultTransactions = [];
-        expr = squel.expr();
-
-        /*
-        if _postInfo
-        
-          expr = expr.and("modifyTime < ?", squel.select().field('modifyTime').from('notes').where("id = ?", _postInfo.id))
-         */
-
-        /*
-        condictionString = ""
-        
-        if (_postInfo != null)
-        
-           *params[":id"] = _postInfo.id;
-          condictionString += " AND modifyTime < (SELECT modifyTime FROM notes WHERE id=:id)";
-        
-         *"SELECT id,title,modifyTime,content,color,selected FROM notes WHERE state = 1 AND content = :contentId AND ';'||tags||';' like '%;'||:keyword||';%'" + condictionString + " ORDER BY title ASC LIMIT 0," + _pageSize.toString(), params
-         */
-        query = squel.select().field('id').field('title').field('modifyTime').field('content').field('color').field('selected').from('notes').where('tags LIKE ?', '%' + _tagInfo.name + '%').toParam();
-        return databaseService.db.transaction(function(tx) {
-          return tx.executeSql(query.text, query.values, (function(tx, result) {
-            var i, _i, _ref;
-            for (i = _i = 0, _ref = result.rows.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-              resultTransactions.push(result.rows.item(i));
-            }
-            console.log("dealGetPostsWithTag");
-            return process2(callback);
-          }), function(tx, error) {
-            return console.log(error);
-          });
+        kango.addMessageListener("persistenceBack2FrontConcrete2", function(event) {
+          console.log('persistenceBack2Front - database transport');
+          debugger;
+          if (callback) {
+            return callback(event.data.dataObject);
+          }
+        });
+        return kango.dispatchMessage('persistenceFront2BackConcrete2', {
+          'method': 'initGetPostsWithTagToken',
+          'dataObject': tag.name
         });
       };
       _keyword = void 0;
@@ -423,8 +398,6 @@ require 'restangular'
 
   })();
 
-  module.exports = AggregationModel;
-
   angular.module('shared_view.module').service('aggregationModelService', ['DBSCHEMAS', 'databaseService', AggregationModel]);
 
   async = require('async');
@@ -468,27 +441,42 @@ require 'restangular'
         });
       };
       this.imported = false;
-      this.getUsers = function(type, callback, db) {
+      this.getUsers = function(type, callback) {
         window.localStorage.setItem("state", "first");
 
         /* out - background db
         if databaseService.db == undefined
           databaseService.connect()
          */
-        if (databaseService.db === void 0) {
-          databaseService.db = db;
-        }
+
+        /*
+        if databaseService.db == undefined
+          databaseService.db = db
+         */
         return Restangular.one('friends').customPOST(JSON.stringify({}), "", {}, {
           "Content-Type": "application/json",
           "providerId": "facebook",
           "apikey": "markus.gritsch.5"
         }).then(function(result) {
-          return async.forEachSeries(result.socialFriends, preProcess, function(err) {
-            console.log("Error in preProcess" != null);
+          kango.addMessageListener("persistenceBack2FrontConcrete", function(event) {
+            console.log('persistenceBack2FrontConcrete - database transport');
+            debugger;
             if (callback) {
               return callback();
             }
           });
+          return kango.dispatchMessage('persistenceFront2BackConcrete', {
+            'method': 'getUsers',
+            'dataObject': result.socialFriends
+          });
+
+          /* out handled in background script
+          async.forEachSeries result.socialFriends, preProcess, (err) ->
+          
+            console.log "Error in preProcess"?
+          
+            callback() if callback
+           */
         });
       };
       preProcess = function(socialFriend, callback) {
@@ -1302,8 +1290,6 @@ require 'restangular'
       aggregationModelService.resultTransactions.push entity
    */
 
-  module.exports = AggregationRest;
-
   angular.module('shared_view.module').service('aggregationRestService', ['Restangular', 'aggregationModelService', '$cordovaSQLite', 'DBSCHEMAS', 'databaseService', AggregationRest]);
 
   Database = (function() {
@@ -1387,8 +1373,6 @@ require 'restangular'
 
   })();
 
-  module.exports = Database;
-
   angular.module('shared_view.module').service('databaseService', [Database]);
 
   ProviderRestangular = (function() {
@@ -1404,8 +1388,6 @@ require 'restangular'
     return ProviderRestangular;
 
   })();
-
-  module.exports = ProviderRestangular;
 
   angular.module('shared_view.module').config(['RestangularProvider', ProviderRestangular]);
 
@@ -1460,8 +1442,6 @@ require 'restangular'
   
      *constructor: ($cordovaCamera, $cordovaContacts, GalleryService, $cordovaDevice) ->
    */
-
-  module.exports = SideMenu;
 
   angular.module('shared_view.module').factory('SideMenu', ['$serviceScope', SideMenu]);
 

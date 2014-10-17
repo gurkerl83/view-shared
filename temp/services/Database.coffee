@@ -118,7 +118,7 @@ class Database
   )()
   ###
 
-module.exports = Database
+#module.exports = Database
 
 angular.module('shared_view.module')
 .service('databaseService', [Database])

@@ -1,24 +1,20 @@
 async = require 'async'
 squel = require 'squel'
 
-require 'collections/shim-array'
-
 class AggregationModel
 
   constructor: (DBSCHEMAS, databaseService) ->
 
-    #@globalTags = array()
-    @globalTags = []
+    @globalTags = array()
 
-    #resultTransactions = array()
-    resultTransactions = []
-
+    resultTransactions = array()
     items = {}
 
     dataLoaded = false
 
     @currentNode = undefined
     @state = 'initial'
+
 
     @processResultTransactions = (filterOn, callback)->
 
@@ -33,19 +29,23 @@ class AggregationModel
         dealGetTags callback
 
         items
-      ###
-
-      chrome.runtime.onMessage.addListener (message, sender, sendResponse) ->
-
-        debugger
-        ###
-        if message.type == "init"
-          chrome.windows.create({url : chrome.extension.getURL('display.html')})
-          sendResponse({ })
-        ###
 
       debugger
       kango.dispatchMessage('persistenceFront2Back', "");
+      ###
+
+      kango.addMessageListener(("persistenceBack2FrontConcrete"), (event) ->
+
+        console.log 'persistenceBack2Front - database transport'
+
+        debugger
+
+        callback event.data.dataObject if callback
+
+      );
+
+      kango.dispatchMessage('persistenceFront2BackConcrete', {'method': 'processResultTransactions', 'dataObject': 'facebook'});
+
 
       ### out - background db
       if databaseService.db == undefined
@@ -113,10 +113,10 @@ class AggregationModel
     dealGetTags = (callback) ->
     #dealGetTags = ->
 
-      #new check it
-      #resultTransactions = array()
-      resultTransactions = []
+      console.log 'dealGetTags called'
 
+      #new check it
+      resultTransactions = array()
       items = {}
 
       #"SELECT t.*, ts.noteId AS "postCount" FROM (SELECT * FROM notes_tag) `t`, (SELECT * FROM notes_tag_set) `ts`, (SELECT * FROM notes) `n` WHERE (t.id = ts.tagId AND ts.noteId = n.id AND n.content = facebook)"
@@ -276,9 +276,7 @@ class AggregationModel
     #@initGetPostsWithTagToken = (tag, lastPost, pageSize, provider, filterOn, callback) ->
     @initGetPostsWithTagToken = (tag, provider, filterOn, callback) ->
 
-      #resultTransactions = array()
-      resultTransactions = []
-
+      resultTransactions = array()
       items = {}
 
       _tagInfo = tag;
@@ -304,95 +302,26 @@ class AggregationModel
         callback(items))
       ###
 
-      dealGetPostsWithTag callback
+      #out now in background
+      #dealGetPostsWithTag callback
+
+      kango.addMessageListener(("persistenceBack2FrontConcrete2"), (event) ->
+
+        console.log 'persistenceBack2Front - database transport'
+
+        debugger
+
+        callback event.data.dataObject if callback
+
+      );
+
+      #kango.dispatchMessage('persistenceFront2BackConcrete2', {'method': 'initGetPostsWithTagToken', 'dataObject': {'tag': tag, 'provider': provider, 'filterOn': filterOn}});
+      kango.dispatchMessage('persistenceFront2BackConcrete2', {'method': 'initGetPostsWithTagToken', 'dataObject': tag.name});
 
       #dataLoaded = true
 
-      items
-
-    #dealGetPostsWithTag = ->
-    dealGetPostsWithTag = (callback) ->
-
-      resultTransactions = undefined
-      #resultTransactions = array()
-      resultTransactions = []
-
-      expr = squel.expr()
-
-      ###
-      if _postInfo
-
-        expr = expr.and("modifyTime < ?", squel.select().field('modifyTime').from('notes').where("id = ?", _postInfo.id))
-      ###
-
-      ###
-      condictionString = ""
-
-      if (_postInfo != null)
-
-        #params[":id"] = _postInfo.id;
-        condictionString += " AND modifyTime < (SELECT modifyTime FROM notes WHERE id=:id)";
-
-      #"SELECT id,title,modifyTime,content,color,selected FROM notes WHERE state = 1 AND content = :contentId AND ';'||tags||';' like '%;'||:keyword||';%'" + condictionString + " ORDER BY title ASC LIMIT 0," + _pageSize.toString(), params
-      ###
-
-      query = squel.select()
-
-      .field('id')
-      .field('title')
-      .field('modifyTime')
-      .field('content')
-      .field('color')
-      .field('selected')
-
-      .from('notes')
-
-      .where(
-        #squel.expr().and("state = '1'").and("content = 'facebook'").and("';'||tags||';' like '%;'||:keyword||';%'").and("modifyTime" < squel.select().from('notes').where("id = ?", _postInfo.id))
-
-        #squel.expr().and("state = '1'").and("content = 'facebook'").and("';'||tags||';' like '%;'||';%'").and("modifyTime" < squel.select().from('notes').where("id = ?", _postInfo.id))
-
-        #expr.and("state = '1'").and("content = ?", 'facebook')
-
-        #expr
-
-        # put in again
-        #.and("tags like = ?", _keyword)
-
-        #.and("tags like = ?", _tagInfo.id == 0 ? "" : _tagInfo.name;)
-        #.and("tags like = ?", _tagInfo.name)
-        #.and("tags like = Family") #, _tagInfo.name)
-        #"tags like = Family" #, _tagInfo.name)
-        #'tags LIKE "Close Friends"' #, _tagInfo.name);
-        #'tags LIKE "%Close Friends%"' #, _tagInfo.name);
-
-        'tags LIKE ?', '%' + _tagInfo.name + '%'
-      )
-
-      #.order("title", true)
-
-      #.limit(0, 100)
-
-      .toParam()
-      #.toString()
-
-      databaseService.db.transaction (tx) ->
-
-        #tx.executeSql query, [], ((tx, result) ->
-        tx.executeSql query.text, query.values, ((tx, result) ->
-
-          for i in [0 ... result.rows.length]
-            resultTransactions.push result.rows.item(i)
-
-          console.log "dealGetPostsWithTag"
-
-          process2 callback
-
-        ), (tx, error) ->
-
-          console.log error
-
-      #callback() if callback
+      # out returned from background
+      #items
 
 
     #_postInfo = undefined
@@ -411,6 +340,7 @@ class AggregationModel
       if databaseService.db == undefined
         databaseService.connect()
       ###
+
 
       #if(!dataLoaded)
 
@@ -556,7 +486,7 @@ class AggregationModel
 
       return chosen.join('')
 
-module.exports = AggregationModel
+#module.exports = AggregationModel
 
 
 angular.module('shared_view.module')

@@ -10,7 +10,7 @@ class ProviderRestangular #Service #Factory
       RestangularConfigurer.setBaseUrl "http://millipede.me:9001/"
     ###
 
-module.exports = ProviderRestangular
+#module.exports = ProviderRestangular
 
 angular.module('shared_view.module')
 .config(['RestangularProvider', ProviderRestangular])

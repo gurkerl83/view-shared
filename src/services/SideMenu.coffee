@@ -39,4 +39,4 @@ class SideMenu extends Service
   #constructor: ($cordovaCamera, $cordovaContacts, GalleryService, $cordovaDevice) ->
 ###
 
-module.exports = SideMenu
+#module.exports = SideMenu
